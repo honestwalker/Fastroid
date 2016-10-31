@@ -19,12 +19,14 @@ Fastroid是有上海信行软件Android团队开发的一组Android开发套件�
 
 # 使用说明
 
+build.gradle中配置Fastroid的依赖。
 ````Gradle
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
+      compile 'com.github.honestwalker:Fastroid:0.1.0'
     }
 }
 ````
