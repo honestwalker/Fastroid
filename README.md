@@ -2,7 +2,7 @@
 
 ![Fastroid](http://www.kancart.com/images/kancart_logo.png)
 
-Fastroid是有上海信行软件Android团队开发的一组Android开发套件。简化了一些Android开发常用业务的编码和系统API的调用，集合了大量的工具类，简化日常编码。
+Fastroid是有上海信行软件Android团队开发的一组Android开发套件。简化了一些Android开发常用业务的编码和系统API的调用，集合了一些常用的工具类和UI控件，简化日常编码，用过依赖注入把App一些常规的开发场景和应用耦合，如首页菜单页面可配置化与耦合，初始化业务逻辑耦合，Web与Native交互业务耦合等等。
 同时也集成了一些常用的第三方框架，如xUtils、ShareSDK、ImageLoader等等。
 
 ## Features
