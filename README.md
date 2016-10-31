@@ -17,7 +17,7 @@ Fastroid是有上海信行软件Android团队开发的一组Android开发套件�
 - 通用程序初始化功能模块，初始化业务耦合。
 - 更多....
 
-# 使用说明
+# 导入
 
 build.gradle中配置Fastroid的依赖。
 ````Gradle
