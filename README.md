@@ -2,7 +2,6 @@
 
 ![Fastroid](http://www.kancart.com/images/kancart_logo.png)
 
-Fastroid
 Fastroid是有上海信行软件Android团队开发的一组Android开发套件。简化了一些Android开发常用业务的编码和系统API的调用，集合了大量的工具类，简化日常编码。
 同时也集成了一些常用的第三方框架，如xUtils、ShareSDK、ImageLoader等等。
 
