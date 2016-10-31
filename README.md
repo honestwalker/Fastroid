@@ -24,7 +24,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-      compile 'com.github.honestwalker:Fastroid:0.1.0'
+      compile 'com.github.honestwalker:Fastroid:0.1.1'
     }
 }
 ````
