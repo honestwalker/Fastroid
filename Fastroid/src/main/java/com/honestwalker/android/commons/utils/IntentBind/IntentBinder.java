@@ -29,10 +29,8 @@ public class IntentBinder {
             Class c = context.getClass();
             Annotation classAnno = c.getAnnotation(IntentBind.class); // activity包含@IntentBind注解就自动匹配所有field
             Field[] fields = c.getDeclaredFields();
-            LogCat.d("INTENT", "获取 " + c.getName() + " 的字段:");
             for(Field field : fields) {
                 field.setAccessible(true);
-                LogCat.d("INTENT" , "field=" + field.getName());
                 if(classAnno != null) {
                     bindField(field);
                 } else {

@@ -106,11 +106,9 @@ public class ApiCookieManager {
 				Map.Entry<String,String> ent = iter.next();
 				cookieStr.append(ent.getKey() + "=" + ent.getValue() + ";");
 			}
-			LogCat.d("COOKIE", cookieStr.toString());
 			return cookieStr.toString();
 		} catch (Exception e) {
 		}
-		LogCat.d("COOKIE", "本地cookie不存在。");
 		return "";
 	}
 	
@@ -158,7 +156,7 @@ public class ApiCookieManager {
 			httpRequest.addHeader("Cookie", cookieStr.toString());
 
 			LogCat.d("REQUEST", "\r\n[SET COOKIE]" + cookieStr.toString());
-			
+
 			return cookieStr.toString();
 		} catch (Exception e) {
 		}
@@ -207,7 +205,6 @@ public class ApiCookieManager {
 	 * @return
 	 */
 	private synchronized static List<Cookie> getCookies(DefaultHttpClient httpClient) {
-		LogCat.d("COOKIE", "httpclient.getcookies == 0 " + httpClient.getCookieStore().getCookies().size());
 		return httpClient.getCookieStore().getCookies();
 	}
 

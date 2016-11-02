@@ -32,7 +32,6 @@ public class FileIO {
 				dir.mkdirs();
 			}
 			file = new File(filePath + File.separator + fileName);
-			LogCat.d("ddddd" , "输出 " + file.getPath());
 			if(!file.exists()) {
 				file.createNewFile();
 			}

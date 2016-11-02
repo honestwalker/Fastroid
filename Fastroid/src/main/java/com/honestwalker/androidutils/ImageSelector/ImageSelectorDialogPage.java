@@ -65,7 +65,6 @@ public class ImageSelectorDialogPage extends DialogPage {
 
     @Override
     protected void initView() {
-        LogCat.d("ddddd" , "initview");
         cameraBTN = (Button) findViewById(R.id.topBTN);
         imageBTN  = (Button) findViewById(R.id.bottomBTN);
         setTitleVisible(false);
