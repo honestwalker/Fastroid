@@ -29,3 +29,56 @@ buildscript {
 }
 ````
 
+
+## API和WEB服务端环境配置
+在raw目录下新建文件 server.xml ， 并输入以下配置。
+````
+<server>
+
+    <!-- =================================================================================== -->
+    <!-- contexts 包含了各个服务端的配置                                                         -->
+    <!-- context 服务端环境配置           													     -->
+    <!--    id 环境id                    													 -->
+    <!--    extends 复用环境配置，如果当前context又配置了同名字段则覆盖父类字段 					     -->
+    <!--    method 请求方式 post get put delete等选项，默认post 								 -->
+    <!--    action-key 如果服务端api需要一个参数来标记是什么api请求动作，这个参数就有actionKey配置      -->
+    <!--    host 服务端api url , 如果服务端每个api地址不一样就有req对象的注解配置uri                  -->
+    <!--    context 节点下 id 和 extends 属性是关键字 ， 它的子节点自由配置，并对应一个对象            -->
+    <!--               传给 ServerLoader.getServerConfig 进行解析                              -->
+    <!-- =================================================================================== -->
+
+    <scheme>
+        <context-id>dev</context-id>
+    </scheme>
+
+    <contexts>
+
+        <context id="default_context">
+            <method>post</method>
+            <action_key>method</action_key>
+            <app_key>11111111</app_key>
+            <app_secret>11111111111111111111111111111111</app_secret>
+        </context>
+        
+        <context id="test_context" extends="default_context">
+        </context>
+        
+        <context id="dev" extends="test_context">
+            <host>http://dev.xjshift.com/</host>
+            <web_host>http://dev.xjshift.com/</web_host>
+        </context>
+
+        <context id="release" extends="test_context">
+            <host>http://api.xxx.com</host>
+            <web_host>http://m.xjshift.com/</web_host>
+        </context>
+
+    </contexts>
+
+</server>
+
+````
+context可以有继承关系，但不要相互继承。
+
+
+
