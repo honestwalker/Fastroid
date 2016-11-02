@@ -32,7 +32,7 @@ buildscript {
 
 ### API和WEB服务端环境配置
 在raw目录下新建文件 server.xml ， 并输入以下配置。
-````Gradle
+````
 <server>
 
     <!-- =================================================================================== -->
@@ -82,8 +82,8 @@ context可以有继承关系，但不要相互继承。
 
 
 
-## 菜单配置
-````Gradle
+### 菜单配置
+````
 <?xml version="1.0" encoding="UTF-8"?>
 <menubar>
 
@@ -145,4 +145,58 @@ context可以有继承关系，但不要相互继承。
 
 </menubar>
 ````
+
+
+### 初始化策略配置与注入
+- 支持指定进程启动初始化。
+- 支持非UI线程初始化。
+
+初始化业务会有一个Action对象，继承 BaseInitAction，并实现init()方法。
+init()方法就是注入的初始化逻辑。
+初始化注入配置如下
+````Gradle
+<strategies>
+    
+    <!-- ======================================================================= -->
+    <!--                                                             			 -->
+	<!--参数说明: 																 -->
+	<!--    																     -->
+	<!-- <strategy> 可选属性 process , 指定进程才会执行该组初始化操作-->    
+	<!--    	固定参数 main 只有在主进程才会执行     				         -->
+	<!--    	不加process属性，住进成也会执行，但子进程也会执行          -->
+	<!-- <action>													       -->
+	<!--  name: 初始化策略实现对象                             			 -->    
+	<!--  async: (可选)执行初始化过程中，是否异步执行，默认为false	 -->    
+    <!--                                                             			  -->
+    <!--其他说明:                                                   			  -->
+    <!--    初始化过程中，将按照actions中的顺序依次执行        			  -->
+    <!--                                                             			  -->
+    <!-- ======================================================================== -->
+
+    <strategy process="main">
+        <actions>
+            <action name="com.honestwalker.android.init.ImageCacheInitAction" />
+            <action name="com.honestwalker.android.modules.commons.init.PrestartProcessAction" />
+        </actions>
+    </strategy>
+
+    <strategy>
+        <actions>
+            <action name="com.honestwalker.android.init.GlobalInitAction" />
+            <action name="com.honestwalker.android.modules.commons.init.APIInitAction" />
+        </actions>
+    </strategy>
+    
+</strategies>
+````
+
+
+
+
+
+
+
+
+
+
 
