@@ -22,6 +22,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class TesterConfigReader {
 
+    /**
+     * 是否开启自动化测试
+     */
+    private static boolean isEnable = false;
+
     private static Actions actions = null;
 
     public Actions load(Context context, int testerResId) throws JDOMException, IOException {
@@ -30,10 +35,16 @@ public class TesterConfigReader {
 
         InputStream in = context.getResources().openRawResource(testerResId);
 
-        SAXBuilder sb = new SAXBuilder();
-        Document doc = sb.build(in);//读入指定文件
-        Element root = doc.getRootElement();//获得根节点
+        SAXBuilder sb  = new SAXBuilder();
+        Document doc   = sb.build(in);//读入指定文件
+        Element root   = doc.getRootElement();//获得根节点
         List<Element> rootChildrenList = root.getChildren();//将根节点下的所有子节点放入List中
+
+        Element enableEmt = root.getChild("enable");
+
+        try {
+            isEnable = Boolean.parseBoolean(enableEmt.getValue());
+        } catch (Exception e) {}
 
         Actions actions = new Actions();
         Map<String, Action> actionMap = new HashMap<>();
@@ -76,8 +87,6 @@ public class TesterConfigReader {
         actions.setActions(actionMap);
 
         TesterConfigReader.actions = actions;
-
-        LogCat.d("tester", "返回actions");
 
         return actions;
 

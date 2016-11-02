@@ -66,7 +66,6 @@ public class InitStrategy {
 		
 		// 限定只有主进程才执行时，子进程略过执行
 		boolean isMainTheadOnly = strategyBean.getProcessName().endsWith(":main");
-		LogCat.d(TAG, "isMainTheadOnly=" + isMainTheadOnly);
 		if(isMainTheadOnly && currentProcessName.indexOf(":") > -1) {
 			return;
 		}

@@ -1,13 +1,12 @@
 package com.honestwalker.android.share;
 
-import android.content.Context;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 /**
+ * ShareSDK分享工具类
  * Created by lanzhe on 16-8-4.
  */
 public class ShareUtil {

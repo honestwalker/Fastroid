@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.honestwalker.android.commons.jscallback.bean.OpenUrlParamBean;
 import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
+import com.honestwalker.androidutils.IO.LogCat;
 
 /**
  * OpenUrl类型的 js callback 业务实现
@@ -12,8 +13,10 @@ import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
 public class OpenUrlAction extends JSCallbackAction<OpenUrlParamBean> {
 
     @Override
-    protected void doAction(Activity context , OpenUrlParamBean paramBean , HtmlWebView webView) {
-//        WebActivityEntry.toWebActivity(context,paramBean.getUrl(),paramBean.getTitle(),paramBean.isLoading());
+    protected String doAction(Activity context , OpenUrlParamBean paramBean , HtmlWebView webView) {
+        LogCat.d("js_callback" , "OpenUrlAction doAction");
+        return "";
+
     }
 
 }

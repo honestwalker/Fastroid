@@ -17,6 +17,9 @@ import com.honestwalker.androidutils.activity.fragment.menubar.MenubarItemBean;
 import com.lidroid.xutils.ViewUtils;
 import com.systembartint.SystemBarTintManager;
 
+/**
+ * 菜单activity 父类
+ */
 public abstract class MenuActivity extends BaseFragmentActivity implements IMenuContext {
 
     protected BlurViewPager     pager;

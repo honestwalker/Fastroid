@@ -1,24 +1,15 @@
 package com.honestwalker.android.commons.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.GridView;
-import android.widget.ListView;
 
-import com.honestwalker.android.fastroid.R;
 import com.honestwalker.android.commons.BaseApplication;
 import com.honestwalker.android.commons.Constants.RequestCode;
 import com.honestwalker.android.commons.Constants.ResultCode;
@@ -27,24 +18,16 @@ import com.honestwalker.android.commons.utils.IntentBind.IntentBinder;
 import com.honestwalker.android.commons.utils.StartActivityHelper;
 import com.honestwalker.android.kc_commons.ui.utils.TranslucentStatus;
 import com.honestwalker.android.kc_test.KCTestLauncher;
-import com.honestwalker.androidutils.EventAction.ActionClick;
-import com.honestwalker.androidutils.EventAction.ActionItemClick;
-import com.honestwalker.androidutils.EventAction.ActionLongClick;
-import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.UIHandler;
 import com.honestwalker.androidutils.ViewUtils.ViewSizeHelper;
 import com.honestwalker.androidutils.equipment.DisplayUtil;
 import com.honestwalker.androidutils.equipment.SDCardUtil;
-import com.honestwalker.androidutils.exception.ExceptionUtil;
 import com.honestwalker.androidutils.pool.ThreadPool;
 import com.honestwalker.androidutils.views.AlertDialogPage;
 import com.honestwalker.androidutils.views.loading.Loading;
 import com.honestwalker.androidutils.window.DialogHelper;
 import com.honestwalker.androidutils.window.ToastHelper;
 import com.lidroid.xutils.ViewUtils;
-import com.systembartint.SystemBarTintManager;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by honestwalker on 13-8-8.
@@ -138,8 +121,6 @@ public abstract class BaseActivity extends FragmentActivity {
 		super.onBackPressed();
 		finish();
 
-		LogCat.d("backAnimCode" , "backAnimCode=" + backAnimCode);
-
 		if(backAnimCode != 0) {
 			StartActivityHelper.activityAnim(context, getIntent(), backAnimCode);
 			backAnimCode = 0;
@@ -222,20 +203,6 @@ public abstract class BaseActivity extends FragmentActivity {
 		}
 	}
 	
-	/** 获取当前登录的账户 */
-//	public User getLoginUser() {
-//		try {
-//			User user = (User) ObjectStreamIO.input(getCachePath(), ObjectStreamType.LOGIN_USER);
-//			return user;
-//		} catch (Exception e) {
-//		}
-//		return null;
-//	}
-//	/** 判断是否需要登录 */
-//	protected boolean needLogin() {
-//		return (getLoginUser() == null || StringUtil.isEmptyOrNull(getLoginUser().getSessionkey()));
-//	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent){
 		super.onActivityResult(requestCode, resultCode, intent);
@@ -365,133 +332,11 @@ public abstract class BaseActivity extends FragmentActivity {
 	};
 
 	/*=================================
-	 * 
+	 *
 	 *         公共控件操作结束
-	 * 
+	 *
 	 *=================================*/
 
-	/*=================================
-	 * 
-	 *        公共控件点击事件开始
-	 * 
-	 *=================================*/
-
-	/*=================================
-	 * 
-	 *       公共控件点击事件结束
-	 * 
-	 *=================================*/
-	
-	
-	/*================================
-	 * 
-	 *            控件事件重写开始 
-	 * 
-	 *================================*/
-	
-	/** 点击事件code */
-	private final int ACTION_CLICK = 1; 
-	/** 长按事件code */
-	private final int ACTION_LONGCLICK = 2;
-	/** 列表点击事件code */
-	private final int ACTION_ITEMCLICK = 3; 
-	
-	/** 设置按钮点击事件 */
-	protected void setClick(final View view , final String clickMethod ,final Object... args) {
-		setActionListener(view, ACTION_CLICK, clickMethod, args);
-	}
-	/** 设置按钮点击事件 */
-	protected void setClick(final View view , final String clickMethod) {
-		setClick(view, clickMethod, new Object[0]);
-	}
-	
-	/** 设置按钮长按事件 */
-	protected void setLongClick(final View view , final String clickMethod ,final Object... args) {
-		setActionListener(view, ACTION_LONGCLICK, clickMethod, args);
-	}
-	/** 设置按钮长按事件 */
-	protected void setLongClick(final View view , final String clickMethod) {
-		setLongClick(view, clickMethod, new Object[0]);
-	}
-	
-	/** 设置按钮长按事件 */
-	protected void setItemClick(final View view , final String clickMethod , final Object... args) {
-		Object[] newArgs;
-		if(args != null && args.length > 0) {
-			newArgs = new Object[1 + args.length];
-			newArgs[0] = (int)0;
-			for(int i=1 ; i < newArgs.length; i++) {
-				newArgs[i] = args;
-			}
-		} else {
-			newArgs = new Object[1];
-			newArgs[0] = (int)0;
-		}
-		setActionListener(view, ACTION_ITEMCLICK ,clickMethod, newArgs);
-	}
-	protected void setItemClick(final View view , final String clickMethod) {
-		setItemClick(view, clickMethod, new Object[0]);
-	}
-	
-	/** 设置按钮事件 */
-	private void setActionListener(final View view , final int actionCode , final String clickMethod ,final Object... args) {
-		if(view != null) {
-			view.setClickable(true);
-			try {
-				// 获取参数列表类型
-				Class[] cargs = new Class[args == null?0:args.length];
-				for(int i=0;i<cargs.length;i++) {
-					cargs[i] = args[i].getClass();
-				}
-				// 获得方法
-			    final Method method = this.getClass().getMethod(clickMethod, cargs);
-			    if(method != null) {
-			    	switch (actionCode) {
-						case ACTION_CLICK: {
-							view.setOnClickListener(new ActionClick(this,method,args));
-						} break;
-						case ACTION_LONGCLICK: {
-							view.setOnLongClickListener(new ActionLongClick(this, method, args));
-						} break;
-						case ACTION_ITEMCLICK: {
-							if(view instanceof ListView) {
-								((ListView)view).setOnItemClickListener(new ActionItemClick(this, method, args));
-							} else if(view instanceof GridView) {
-								((GridView)view).setOnItemClickListener(new ActionItemClick(this, method, args));
-							}
-						} break;
-					}
-			    }
-			} catch (Exception e) {
-				ExceptionUtil.showException(e);
-			}
-		}
-	}
-	/*================================
-	 * 
-	 *            控件事件重写结束
-	 * 
-	 *================================*/
-	
-	
-	/*================================
-	 * 
-	 *          业务逻辑开始
-	 *
-	 *================================*/
-	
-	
-//	/** 登录成功回调 */
-//	public void loginSuccessCallback(Object userInfoBean){};
-//	/** 登录取消回调 */
-//	public void loginCancleCallback(){};
-	
-	/*================================
-	 * 
-	 *          业务逻辑结束
-	 *
-	 *================================*/
-	
 	/*================================
 	 * 
 	 *            页面跳转相关 开始

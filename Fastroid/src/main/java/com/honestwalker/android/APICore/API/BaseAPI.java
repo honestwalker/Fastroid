@@ -265,10 +265,10 @@ public abstract class BaseAPI {
         } catch (SocketTimeoutException e) {
             onTimeout(listener);
         } catch (ApiException e) {
-            LogCat.d("api", "ApiException" + e.getMessage());
+            LogCat.d("REQUEST", "ApiException" + e.getMessage());
             onFail(listener, e);
         } catch (Exception e) {
-            LogCat.d("api", "Exception" + e.getMessage());
+            LogCat.d("REQUEST", "Exception" + e.getMessage());
             ApiException apiException = new ApiException(e.getMessage());
             apiException.setStackTrace(e.getStackTrace());
             onFail(listener, apiException);
@@ -293,7 +293,6 @@ public abstract class BaseAPI {
         RequestMethod requestMethod = api.requestMethod();
         String result = "";
         String url = Server.context(context).getHost();
-//        String url = getEnvironment().getApi_host();
 
         // req 可以host覆盖
         if (!StringUtil.isEmptyOrNull(api.host()))  url = api.host();
@@ -340,15 +339,11 @@ public abstract class BaseAPI {
         if(parseStrategies != null) {
             for(Class strategyClass : parseStrategies) {
                 try {
-                    LogCat.d("json" , "解析策略 " + strategyClass);
                     ParseStrategy parseStrategy = (ParseStrategy) strategyClass.newInstance();
                     BaseResp<T> ts = (BaseResp<T>) gson.fromJson(result, parseStrategy.getStrategyClass());
                     t = (BaseResp<T>) parseStrategy.transition(ts);
-                    LogCat.d("json" , "目标 " + parseStrategy.getStrategyClass());
-                    LogCat.d("json" , strategyClass + " 解析成功 : " + t);
                     return t;
                 } catch (Exception e) {
-                    LogCat.d("json", strategyClass + "  解析失败");
                 }
             }
         }

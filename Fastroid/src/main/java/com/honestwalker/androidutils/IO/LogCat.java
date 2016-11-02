@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * @author Administrator
- * 
+ *
+ * 日志工具
+ *
  */
 public class LogCat {
 

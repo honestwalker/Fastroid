@@ -26,8 +26,6 @@ public class ViewHolderBuilder {
 				
 				boolean isViewHolderInnerClass = false;
 				
-				LogCat.d("Holder", "创建 viewHolderParent=" + viewHolderParent);
-				LogCat.d("Holder", "viewHolder=" + viewHolder.toString());
 				if(viewHolder.toString().indexOf("$") > -1) {
 					isViewHolderInnerClass = true;
 				} else {
@@ -65,7 +63,6 @@ public class ViewHolderBuilder {
 			ViewInject viewInject = field.getAnnotation(ViewInject.class);
 			if(viewInject != null) {
 				try {
-					LogCat.d("vvv" , "viewInject.value()=" + viewInject.value() + "  t=" + t);
 					field.set(t , convertView.findViewById(viewInject.value()));
 				} catch (IllegalAccessException e) {}
 			}

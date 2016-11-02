@@ -11,6 +11,9 @@ import java.nio.channels.FileChannel;
 
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 
+/**
+ * 文本输入，输出工具类
+ */
 public class FileIO {
 	
 	/**

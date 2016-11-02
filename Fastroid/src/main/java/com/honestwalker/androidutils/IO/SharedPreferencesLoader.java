@@ -3,6 +3,9 @@ package com.honestwalker.androidutils.IO;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * SharedPreferences 操作工具类
+ */
 public class SharedPreferencesLoader {
 	
 	private static SharedPreferencesLoader instance;

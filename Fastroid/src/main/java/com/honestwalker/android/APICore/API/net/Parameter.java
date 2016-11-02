@@ -157,9 +157,6 @@ public class Parameter {
         put("app_key", appKey);
 
         LogCat.d("REQUEST", "\r\n");
-//		for (NameValuePair nvp : paramList) {
-//			LogCat.d("REQUEST", nvp.getName() + "=" + nvp.getValue());
-//		}
         return paramList;
 
     }
@@ -181,9 +178,7 @@ public class Parameter {
             }
         }
 
-//		buf.append(appSecret);
         buf.append(appSecret);
-        LogCat.d("TEST", "SIGN KV = " + buf.toString());
 
         String md5Sign = "";
         try {

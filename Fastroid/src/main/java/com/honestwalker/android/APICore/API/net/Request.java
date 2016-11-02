@@ -215,11 +215,6 @@ public class Request {
 
         ApiCookieManager.setCookie(context, httpRequest);
 
-//		CookieStore cs = new BasicCookieStore();
-//		org.apache.http.cookie.Cookie c = new BasicClientCookie("domain", "efomm900641q22nav9fn44f3g3");
-//		cs.addCookie(c);
-//		httpClient.setCookieStore(cs);
-
         HttpResponse response = httpClient.execute(httpRequest);
 
         String responseStr = EntityUtils.toString(response.getEntity());
@@ -282,13 +277,6 @@ public class Request {
 
         MultipartEntity entity = new MultipartEntity();
 
-//		if(needSign) {
-//			entity = new UrlEncodedFormEntity(
-//					parameters.sortPostParameter(), HTTP.UTF_8);
-//		} else {
-//			entity = new UrlEncodedFormEntity(
-//					parameters.getParameterList(), HTTP.UTF_8);
-//		}
         List<NameValuePair> nvps = null;
         if (needSign) {
             nvps = parameters.sortPostParameter();
@@ -308,14 +296,12 @@ public class Request {
         logSB.append("\r\n[Params]: " + urllog.substring(urllog.indexOf("?")).replace("&", "\r\n").replace("?", "\r\n") + "\r\n");
 
         logSB.append("\r\n[COOKIE]: " + ApiCookieManager.getLocalCookie(context) + "\r\n\r\n");
-//        logSB.append("\r\n[COOKIE]: " + CookieManager.getHttpClientCookie(httpClient) + "\r\n\r\n");
 
         httpRequest.setEntity(entity);
 
         ApiCookieManager.setCookie(context, httpRequest);
 
         {   // 文件
-//			MultipartEntity reqEntity = new MultipartEntity();
             if (file != null) {
                 Iterator<Map.Entry<String, String>> iter = file.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -350,50 +336,6 @@ public class Request {
 
     }
 
-	/*public String doPost(String url, Parameter parameters)
-            throws InvalidKeyException, ClientProtocolException,
-			RequestFailException, IOException, Exception {
-
-		StringBuffer logSB = new StringBuffer();
-
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-
-		// 重试设置
-		DefaultMethodRetryHandler retryhandler = new DefaultMethodRetryHandler();
-		retryhandler.setRetryCount(3);
-		retryhandler.setRequestSentRetryEnabled(true);
-		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryhandler);
-
-		// 超时设置
-		httpClient.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, 40000);
-
-		HttpPost httpPost = new HttpPost(url);
-//		httpPost.setHeader("TD-Agent","en_US@currency=USD,device=ios,ad421e72d15c0c3fa230c55cd728d7fd");
-		httpPost.setHeader("TD-Agent",getTDHeader());
-		LogCat.d("REQUEST_HEADER", getTDHeader());
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
-				parameters.getParameterList(), HTTP.UTF_8);
-
-		logSB.append("\r\n");
-		logSB.append("\r\n[POST]: " + url + parameters.toString() + "\r\n\r\n");
-
-		httpPost.setEntity(entity);
-
-		HttpResponse response = httpClient.execute(httpPost);
-		String responseStr = EntityUtils.toString(response.getEntity());
-		logSB.append("[RESPONSE]: " + responseStr);
-		if (responseStr != null) {
-			try {
-				responseStr = responseStr.substring(responseStr.indexOf("{"));
-			} catch (Exception e) {
-			}
-		}
-
-		LogCat.d(TAG, logSB.toString());
-
-		return responseStr;
-	}*/
-
     /**
      * 向指定url发送请求
      */
@@ -410,58 +352,5 @@ public class Request {
         }
         return "";
     }
-
-    /**
-     * 向指定url发送请求，和参数
-     *
-     * @param url
-     * @param parameters
-     * @return
-     * @throws InvalidKeyException
-     * @throws IOException
-     * @throws ClientProtocolException
-     */
-	/*public String doGet(String url, Parameter parameters)
-			throws InvalidKeyException, ClientProtocolException,
-			RequestFailException, IOException, Exception {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		// 重试设置
-		DefaultMethodRetryHandler retryhandler = new DefaultMethodRetryHandler();
-		retryhandler.setRetryCount(3);
-		retryhandler.setRequestSentRetryEnabled(true);
-		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-				retryhandler);
-		// 超时设置
-		httpClient.getParams().setParameter(HttpMethodParams.SO_TIMEOUT,
-				40000);
-
-		url += parameters.toString();
-		LogCat.d(TAG, "\r\n[GET]: " + url + "\r\n\r\n");
-		HttpGet httpGet = new HttpGet(url);
-//		httpGet.setHeader("TD-Agent","en_US@currency=USD,device=ios,ad421e72d15c0c3fa230c55cd728d7fd");
-		httpGet.setHeader("TD-Agent",getTDHeader());
-		HttpResponse response = httpClient.execute(httpGet);
-
-		String responseStr = EntityUtils.toString(response.getEntity());
-		LogCat.d(TAG, "[RESPONSE]: " + responseStr);
-		return responseStr;
-	}*/
-
-    private static int checkConnectDialogShowTimes = -1; // 避免连续跳窗提示
-
-
-    public void checkConnect2() {
-
-        ConnectivityManager manager = (ConnectivityManager) context
-                .getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
-        LogCat.d("connect", "networkinfo == null" + (networkinfo == null));
-        if (networkinfo == null || !networkinfo.isAvailable()) {
-//			DialogHelper.alert(context, "Warning", "You must connect to the internet to use Tinydeal!");
-//			loading(false);
-        }
-
-    }
-
 
 }

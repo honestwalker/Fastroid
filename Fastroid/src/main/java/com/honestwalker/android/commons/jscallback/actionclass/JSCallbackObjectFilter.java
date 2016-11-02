@@ -46,7 +46,6 @@ public class JSCallbackObjectFilter {
         UIHandler.post(new Runnable() {
             @Override
             public void run() {
-
                 ToastHelper.alert(context, show);
             }
         });

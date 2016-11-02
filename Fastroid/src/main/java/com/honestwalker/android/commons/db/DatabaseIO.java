@@ -12,7 +12,7 @@ import com.lidroid.xutils.exception.DbException;
 import java.util.List;
 
 /**
- * 数据库操作工具类
+ * 数据库操作工具类，现改用xUtil进行操作
  */
 public final class DatabaseIO {
 

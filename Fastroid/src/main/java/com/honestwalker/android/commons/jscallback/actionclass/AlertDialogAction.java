@@ -13,8 +13,9 @@ import com.honestwalker.androidutils.window.DialogHelper;
 public class AlertDialogAction extends JSCallbackAction<AlertParamBean> {
 
     @Override
-    protected void doAction(Activity context , AlertParamBean paramBean , HtmlWebView webView) {
+    protected String doAction(Activity context , AlertParamBean paramBean , HtmlWebView webView) {
         DialogHelper.alert(context, paramBean.getTitle(), paramBean.getContent());
+        return "";
     }
 
 }

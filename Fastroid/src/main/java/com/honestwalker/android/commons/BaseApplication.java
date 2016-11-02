@@ -14,13 +14,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Application父类，包涵了一些核心功能的加载
  * Created by honestwalker on 15-10-9.
  */
 public class BaseApplication extends android.app.Application  {
 
     public static Context context = null;
-
-    private static Map<Activity,Activity> signinstanceActivity = new HashMap<Activity,Activity>();
 
     public static String appVersion = "";
     public static String appName = "";
@@ -52,26 +51,9 @@ public class BaseApplication extends android.app.Application  {
 
     }
 
-    public static void addSingleInstanceActivity(Activity activity) {
-        signinstanceActivity.put(activity, activity);
-    }
-    @SuppressLint("NewApi")
-    public static void clearAllSigninstanceActivity() {
-        Iterator<Map.Entry<Activity, Activity>> iter = signinstanceActivity.entrySet().iterator();
-        while(iter.hasNext()) {
-            Activity act = iter.next().getValue();
-            try {
-                LogCat.d("exit", act.getClass().getSimpleName());
-                act.finish();
-            } catch (Exception e) {
-            }
-        }
-    }
-
     public static void exit() {
         Application.exit(context);
         System.exit(0);
-        clearAllSigninstanceActivity();
     }
 
 }

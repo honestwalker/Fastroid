@@ -18,6 +18,9 @@ import com.honestwalker.androidutils.DES;
 import com.honestwalker.androidutils.ImageConvert;
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 
+/**
+ * 图片缓存工具
+ */
 public class ImageCacheUtil {
 	
 	 /**

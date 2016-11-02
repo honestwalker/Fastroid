@@ -6,6 +6,9 @@ import java.lang.reflect.Field;
 
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 
+/**
+ * R索引文件读取工具类
+ */
 public class RClassUtil {
 	
 	/**

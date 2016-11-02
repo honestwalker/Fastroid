@@ -8,6 +8,7 @@ import com.honestwalker.android.commons.jscallback.bean.JSActionConfigBean;
 import com.honestwalker.android.commons.jscallback.bean.JSActionParamBean;
 import com.honestwalker.android.commons.jscallback.io.ConfigLoader;
 import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
+import com.honestwalker.androidutils.IO.LogCat;
 
 import java.util.ArrayList;
 
@@ -36,9 +37,11 @@ public class JSActionExecutor {
      * @param webView
      * @param json
      */
-    public static void execute(Activity context , HtmlWebView webView, String json) {
+    public static String execute(Activity context , HtmlWebView webView, String json) {
         init(context);
 
+
+        LogCat.i("callback", "json " + json);
         // 根据action 得到响应的 JSActionConfigBean 对象
         JSActionParamBean actionBean = new Gson().fromJson(json , JSActionParamBean.class);
         JSActionConfigBean jsActionConfigBean = getJSActionBean(context, actionBean.getAction());
@@ -48,11 +51,12 @@ public class JSActionExecutor {
 
                 // 获取实现具体业务的JSCallbackAction对象
                 JSCallbackAction jsCallbackAction = (JSCallbackAction) jsActionConfigBean.getClazz().newInstance();
-                jsCallbackAction.setParamJson(json);
 
                 try {
-                    jsCallbackAction.execute(context , jsActionConfigBean , json , webView);
+                    String result = jsCallbackAction.execute(context , jsActionConfigBean , json , webView);
+                    return result;
                 } catch (Exception e) {
+                    LogCat.i("callbacke",e.getMessage()+e.getCause());
                 }
 
             } catch (Exception e) {
@@ -60,6 +64,8 @@ public class JSActionExecutor {
 
         } else {
         }
+
+        return "";
     }
 
     /**

@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import com.honestwalker.androidutils.equipment.SDCardUtil;
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 
+/**
+ * 日志输出本地文件工具类
+ */
 public class LogTxt {
 	
 	public static String defaultPath = SDCardUtil.getSDRootPath() + "kancart/";

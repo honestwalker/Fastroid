@@ -12,11 +12,7 @@ import com.honestwalker.androidutils.views.DialogPage;
 import java.util.ArrayList;
 
 /**
- * Depiction:
- * <p/>
- * Auth         :  zhe.lan@honestwalker.com <br />
- * Add Date     :  16-3-2 下午4:51. <br />
- * Rewrite Date :  16-3-2 下午4:51. <br />
+ *   选择拍照或图片对话框
  */
 public class ImageSelectorDialogPage extends DialogPage {
 

@@ -33,23 +33,45 @@ public class KCTestLauncher {
 
     private static String nextAction;
 
+    private static Boolean isEnable = null;
+
+    private static boolean isInit = false;
+
+    private static final String TAG = "KC_TEST";
+
     public static void init (Class rClass, int testerConfig) {
         KCTestLauncher.rClass = rClass;
         KCTestLauncher.testerConfig = testerConfig;
+        KCTestLauncher.isInit = true;
     }
 
     public void start(Activity context) {
+
+        if(!KCTestLauncher.isInit) {
+            LogCat.d(TAG, "KC Test 未初始化");
+        }
+
+        if(isEnable != null && !isEnable) return;
+
         this.context = context;
         TesterConfigReader reader = new TesterConfigReader();
         try {
             actions = reader.load(context, testerConfig);
+            isEnable = actions.isEnable();
         } catch (Exception e) {
             ExceptionUtil.showException(e);
         }
+
         execute();
     }
 
     public void next(Activity context) {
+
+        if(!KCTestLauncher.isInit) {
+            LogCat.d(TAG, "KC Test 未初始化");
+        }
+
+        if(isEnable != null && !isEnable) return;
 
         if(StringUtil.isEmptyOrNull(KCTestLauncher.nextAction)) return;
 

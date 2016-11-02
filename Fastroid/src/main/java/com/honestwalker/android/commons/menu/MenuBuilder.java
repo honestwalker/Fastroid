@@ -23,6 +23,7 @@ import com.honestwalker.androidutils.exception.ExceptionUtil;
 import java.util.ArrayList;
 
 /**
+ * 建立菜单对象
  * Created by honestwalker on 15-12-9.
  */
 public class MenuBuilder {
@@ -167,6 +168,9 @@ public class MenuBuilder {
 
     }
 
+    /**
+     * 菜单切换监听
+     */
     private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {

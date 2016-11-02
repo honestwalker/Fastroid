@@ -22,6 +22,9 @@ import com.honestwalker.androidutils.system.ProcessUtil;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * 拍照和图片选择工具
+ */
 public class ImageSelector {
 
 	private Activity mContext;
