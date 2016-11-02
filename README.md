@@ -30,9 +30,9 @@ buildscript {
 ````
 
 
-## API和WEB服务端环境配置
+### API和WEB服务端环境配置
 在raw目录下新建文件 server.xml ， 并输入以下配置。
-````
+````Gradle
 <server>
 
     <!-- =================================================================================== -->
@@ -81,4 +81,68 @@ buildscript {
 context可以有继承关系，但不要相互继承。
 
 
+
+## 菜单配置
+````Gradle
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+
+    <!-- ================================================================================ -->
+    <!-- 								菜单配置										 
+   		 用法:
+   		 1. 需要菜单的Activity继承MenubarFragmentActivity，不许要setContentView();
+   		 2. 调用initMenubar( R文件class , R.raw.menubar);
+   		 配置说明:
+   	   item-background(可选) 菜单tab背景图片，目前支持drawable和color,暂不支持#ffffff 样式
+   	   			可以时xml的drawable，暂不支持@color，不设置无背景样式
+   	   <items> 页面列表，子项只能有<item>
+   	   <item>
+   	       		属性：id: 功能暂留  
+   	      <label> 菜单上的文本 ， 暂只支持纯文本。
+   	      <label-color> 菜单上的文本颜色 ，只支持 @color/
+   	      <icon> 图标
+   	      <page>  target：打开方式  (必须)
+   	              有4种 1:fragment ， 嵌入式页面 ， 普通fragment，指定fragment包路径
+   	                   2:fragment_web , 嵌入式页面 ， 标准web的fragment
+   	                   3:activity , 跳转activity ， 普通activity （不需要提供值）
+   	                   4:activity_web , 跳转activity ， 跳转到web的activity （不需要提供值）
+     -->
+    <!-- ================================================================================ -->
+
+    <!-- 条目背景，支持颜色和drawable 暂不支持 -->
+    <!--
+    <item-background>@drawable/xmlbg_menubar_tab</item-background>
+     -->
+    <!--<item-background>@color/menu_tab_bg</item-background>-->
+
+    <items>
+
+        <item id="1">
+            <label color="@color/color_menu_label">菜单1</label>
+            <icon drawable="@drawable/xmlbtn_menu_tab" />
+            <page target="fragment" title="首页">
+                <action>com.honestwalker.android.modules.commons.fragments.HomeFragement</action>
+            </page>
+        </item>
+
+        <item id="2">
+            <label color="@color/color_menu_label">菜单2</label>
+            <icon drawable="@drawable/xmlbtn_menu_tab" />
+            <page target="fragment" title="菜单2标题">
+                <action>com.honestwalker.android.modules.demo.fragments.ListDemoFragement</action>
+            </page>
+        </item>
+
+        <item id="3">
+            <label color="@color/color_menu_label">Web菜单</label>
+            <icon drawable="@drawable/xmlbtn_menu_tab" />
+            <page target="fragment_web" title="Web 菜单页">
+                <action>http://www.baidu.com</action>
+            </page>
+        </item>
+
+    </items>
+
+</menubar>
+````
 
