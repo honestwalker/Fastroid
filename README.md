@@ -36,15 +36,15 @@ buildscript {
 <server>
 
     <!-- =================================================================================== -->
-    <!-- contexts 包含了各个服务端的配置                                                         -->
-    <!-- context 服务端环境配置           													     -->
-    <!--    id 环境id                    													 -->
-    <!--    extends 复用环境配置，如果当前context又配置了同名字段则覆盖父类字段 					     -->
-    <!--    method 请求方式 post get put delete等选项，默认post 								 -->
-    <!--    action-key 如果服务端api需要一个参数来标记是什么api请求动作，这个参数就有actionKey配置      -->
-    <!--    host 服务端api url , 如果服务端每个api地址不一样就有req对象的注解配置uri                  -->
-    <!--    context 节点下 id 和 extends 属性是关键字 ， 它的子节点自由配置，并对应一个对象            -->
-    <!--               传给 ServerLoader.getServerConfig 进行解析                              -->
+    <!-- contexts 包含了各个服务端的配置                                                         
+        context 服务端环境配置           													     
+        id 环境id                    													 
+        extends 复用环境配置，如果当前context又配置了同名字段则覆盖父类字段 					     
+        method 请求方式 post get put delete等选项，默认post
+        action-key 如果服务端api需要一个参数来标记是什么api请求动作，这个参数就有actionKey配置      
+        host 服务端api url , 如果服务端每个api地址不一样就有req对象的注解配置uri                  
+        context 节点下 id 和 extends 属性是关键字 ， 它的子节点自由配置，并对应一个对象            
+                   传给 ServerLoader.getServerConfig 进行解析                                 -->
     <!-- =================================================================================== -->
 
     <scheme>
@@ -105,8 +105,8 @@ context可以有继承关系，但不要相互继承。
    	              有4种 1:fragment ， 嵌入式页面 ， 普通fragment，指定fragment包路径
    	                   2:fragment_web , 嵌入式页面 ， 标准web的fragment
    	                   3:activity , 跳转activity ， 普通activity （不需要提供值）
-   	                   4:activity_web , 跳转activity ， 跳转到web的activity （不需要提供值）
-     -->
+   	                   4:activity_web , 跳转activity ， 跳转到web的activity （不需要提供值） 
+			   								  -->
     <!-- ================================================================================ -->
 
     <!-- 条目背景，支持颜色和drawable 暂不支持 -->
@@ -158,19 +158,19 @@ init()方法就是注入的初始化逻辑。
 <strategies>
     
     <!-- ======================================================================= -->
-    <!--                                                             			 -->
-	<!--参数说明: 																 -->
-	<!--    																     -->
-	<!-- <strategy> 可选属性 process , 指定进程才会执行该组初始化操作-->    
-	<!--    	固定参数 main 只有在主进程才会执行     				         -->
-	<!--    	不加process属性，住进成也会执行，但子进程也会执行          -->
-	<!-- <action>													       -->
-	<!--  name: 初始化策略实现对象                             			 -->    
-	<!--  async: (可选)执行初始化过程中，是否异步执行，默认为false	 -->    
-    <!--                                                             			  -->
-    <!--其他说明:                                                   			  -->
-    <!--    初始化过程中，将按照actions中的顺序依次执行        			  -->
-    <!--                                                             			  -->
+    <!--                                                             			 
+	参数说明: 																
+	  																    
+	 <strategy> 可选属性 process , 指定进程才会执行该组初始化操作   
+	    	固定参数 main 只有在主进程才会执行     				         
+	    	不加process属性，住进成也会执行，但子进程也会执行          
+	 <action>													       
+	  name: 初始化策略实现对象                             			    
+	  async: (可选)执行初始化过程中，是否异步执行，默认为false	    
+                                                                 			  
+    其他说明:                                                   			  
+        初始化过程中，将按照actions中的顺序依次执行        			  
+                                                                 		  -->
     <!-- ======================================================================== -->
 
     <strategy process="main">
