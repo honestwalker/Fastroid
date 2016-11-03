@@ -47,8 +47,4 @@ public class Server {
         }
     }
 
-    private static void testShow(ServerContext serverContext) {
-        LogCat.d("ServerConfig" , serverContext.getMethod() + " " + serverContext.getHost());
-    }
-
 }

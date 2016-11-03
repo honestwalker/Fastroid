@@ -87,6 +87,17 @@ public abstract class BaseAPI {
         return new Request(context , false);
     }
 
+
+    private static int contextConfigResId = 0;
+
+    /**
+     * 设置服务端环境配置的raw索引
+     * @param contextConfigResId
+     */
+    static void setContextConfigResId(int contextConfigResId) {
+        BaseAPI.contextConfigResId = contextConfigResId;
+    }
+
     /**
      * 读取环境配置文件
      */
@@ -99,7 +110,7 @@ public abstract class BaseAPI {
 
         if(contextConfig == null) {
             ProperticesLoader loader = new ProperticesLoader();
-            InputStream is = context.getResources().openRawResource(R.raw.context);
+            InputStream is = context.getResources().openRawResource(contextConfigResId);
             InputStreamReader isr = new InputStreamReader(is);
             try {
                 loader.loadConfig(isr);

@@ -1,8 +1,7 @@
-package com.honestwalker.android.commons.jscallback.actionclass;
+package com.honestwalker.android.commons.jscallback.actions;
 
 import android.app.Activity;
 
-import com.honestwalker.android.commons.KancartReceiverManager;
 import com.honestwalker.android.commons.jscallback.bean.JSActionParamBean;
 import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
 import com.honestwalker.androidutils.views.loading.Loading;

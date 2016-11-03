@@ -26,8 +26,7 @@ import android.widget.Button;
 
 import com.honestwalker.android.fastroid.R;
 import com.honestwalker.android.commons.KancartReceiverManager;
-import com.honestwalker.android.commons.jscallback.actionclass.JSCallbackObjectFilter;
-import com.honestwalker.androidutils.Application;
+import com.honestwalker.android.commons.jscallback.actions.JSCallbackObjectFilter;
 import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.IO.SharedPreferencesLoader;
 import com.honestwalker.androidutils.StringUtil;

@@ -39,6 +39,7 @@ public class KCTestLauncher {
 
     private static final String TAG = "KC_TEST";
 
+
     public static void init (Class rClass, int testerConfig) {
         KCTestLauncher.rClass = rClass;
         KCTestLauncher.testerConfig = testerConfig;

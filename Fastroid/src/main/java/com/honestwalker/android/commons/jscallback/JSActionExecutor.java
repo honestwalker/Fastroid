@@ -3,7 +3,7 @@ package com.honestwalker.android.commons.jscallback;
 import android.app.Activity;
 
 import com.google.gson.Gson;
-import com.honestwalker.android.commons.jscallback.actionclass.JSCallbackAction;
+import com.honestwalker.android.commons.jscallback.actions.JSCallbackAction;
 import com.honestwalker.android.commons.jscallback.bean.JSActionConfigBean;
 import com.honestwalker.android.commons.jscallback.bean.JSActionParamBean;
 import com.honestwalker.android.commons.jscallback.io.ConfigLoader;

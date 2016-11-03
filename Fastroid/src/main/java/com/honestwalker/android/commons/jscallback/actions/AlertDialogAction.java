@@ -1,4 +1,4 @@
-package com.honestwalker.android.commons.jscallback.actionclass;
+package com.honestwalker.android.commons.jscallback.actions;
 
 import android.app.Activity;
 

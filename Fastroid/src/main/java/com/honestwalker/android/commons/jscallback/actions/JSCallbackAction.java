@@ -1,4 +1,4 @@
-package com.honestwalker.android.commons.jscallback.actionclass;
+package com.honestwalker.android.commons.jscallback.actions;
 
 import android.app.Activity;
 
@@ -6,8 +6,6 @@ import com.google.gson.Gson;
 import com.honestwalker.android.commons.jscallback.bean.JSActionConfigBean;
 import com.honestwalker.android.commons.jscallback.bean.JSActionParamBean;
 import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
-import com.honestwalker.androidutils.IO.LogCat;
-import com.honestwalker.androidutils.UIHandler;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
