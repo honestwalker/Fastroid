@@ -30,7 +30,7 @@ allprojects {
 
 
 
--主项目build.gradle中配置Fastroid的依赖。
+- 主项目build.gradle中配置Fastroid的依赖。
 ````Gradle
 buildscript {
     repositories {
