@@ -17,7 +17,7 @@ Fastroid是有上海信行软件Android团队开发的一组Android开发套件�
 
 ## 导入
 
-项目根目录build.gradle 配置
+- 项目根目录build.gradle 配置
 ````Gradle
 allprojects {
     repositories {
@@ -28,7 +28,9 @@ allprojects {
 ````
 
 
-主项目build.gradle中配置Fastroid的依赖。
+
+
+-主项目build.gradle中配置Fastroid的依赖。
 ````Gradle
 buildscript {
     repositories {
