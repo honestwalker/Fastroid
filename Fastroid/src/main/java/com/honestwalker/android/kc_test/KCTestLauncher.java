@@ -1,19 +1,25 @@
 package com.honestwalker.android.kc_test;
 
 import android.app.Activity;
-import android.widget.Button;
-import android.widget.EditText;
+import android.content.Context;
 
+import com.honestwalker.android.kc_test.actions.ActivityOperationAction;
+import com.honestwalker.android.kc_test.actions.AlertAction;
+import com.honestwalker.android.kc_test.actions.DelayAction;
+import com.honestwalker.android.kc_test.actions.LogAction;
+import com.honestwalker.android.kc_test.actions.ViewAction;
+import com.honestwalker.android.kc_test.event.Event;
+import com.honestwalker.android.kc_test.event.EventData;
+import com.honestwalker.android.kc_test.event.Events;
 import com.honestwalker.android.kc_test.models.Action;
 import com.honestwalker.android.kc_test.models.Actions;
 import com.honestwalker.android.kc_test.models.Task;
 import com.honestwalker.android.kc_test.models.TesterConfigReader;
 import com.honestwalker.androidutils.IO.LogCat;
-import com.honestwalker.androidutils.IO.RClassUtil;
 import com.honestwalker.androidutils.StringUtil;
-import com.honestwalker.androidutils.UIHandler;
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 import com.honestwalker.androidutils.pool.ThreadPool;
+import com.honestwalker.androidutils.system.ProcessUtil;
 
 import java.util.Map;
 import java.util.Queue;
@@ -23,7 +29,7 @@ import java.util.Queue;
  */
 public class KCTestLauncher {
 
-    private Actions actions;
+    private static Actions actions;
 
     private Activity context;
 
@@ -31,37 +37,75 @@ public class KCTestLauncher {
 
     private static int testerConfig;
 
-    private static String nextAction;
+    /** 连续action 场景时，用于记录下一个action */
+    public static String nextAction;
 
     private static Boolean isEnable = null;
 
     private static boolean isInit = false;
 
-    private static final String TAG = "KC_TEST";
+    private static final String TAG = "tester";
 
+    private static LogWindow logWindow;
 
-    public static void init (Class rClass, int testerConfig) {
+    public static String testLogTag = "";
+
+    public static void init (Context context, Class rClass, int testerConfig) {
+
         KCTestLauncher.rClass = rClass;
         KCTestLauncher.testerConfig = testerConfig;
         KCTestLauncher.isInit = true;
+        TesterConfigReader reader = new TesterConfigReader();
+        try {
+            actions = reader.load(context, testerConfig);
+            testLogTag = actions.getLogTag();
+            isEnable = actions.isEnable();
+            LogCat.d(TAG, "read config isEnable = " + isEnable);
+        } catch (Exception e) {
+            ExceptionUtil.showException(e);
+        }
+
+        LogCat.d("tester", "actions.isLogDialogEnable()=" + actions.isLogDialogEnable());
+        if(ProcessUtil.isMainProcess(context) && actions.isLogDialogEnable()) {
+            logWindow = new LogWindow();
+            logWindow.show(context);
+        }
+
+        registerActions();
+
+    }
+
+    /**
+     * 注册actions，注册过的action 才能接收事件消息，和处理事件
+     */
+    private static void registerActions() {
+        new ViewAction();
+        new AlertAction();
+        new LogAction();
+        new ActivityOperationAction();
+    }
+
+    /**
+     * logWindow 的日志添加
+     * @param log
+     */
+    public static void log(String log) {
+        if(logWindow == null) return;
+        logWindow.appentText(log);
     }
 
     public void start(Activity context) {
 
-        if(!KCTestLauncher.isInit) {
-            LogCat.d(TAG, "KC Test 未初始化");
-        }
-
         if(isEnable != null && !isEnable) return;
 
-        this.context = context;
-        TesterConfigReader reader = new TesterConfigReader();
-        try {
-            actions = reader.load(context, testerConfig);
-            isEnable = actions.isEnable();
-        } catch (Exception e) {
-            ExceptionUtil.showException(e);
+        if(!KCTestLauncher.isInit) {
+            LogCat.d(TAG, "KC Test 未初始化");
+            return;
         }
+
+        this.context = context;
+
+        if(isEnable != null && !isEnable) return;
 
         execute();
     }
@@ -77,69 +121,11 @@ public class KCTestLauncher {
         if(StringUtil.isEmptyOrNull(KCTestLauncher.nextAction)) return;
 
         this.context = context;
+
+        if(isEnable != null && !isEnable) return;
+
         execute();
         KCTestLauncher.nextAction = "";
-    }
-
-    private void inputAction(final Task task) {
-        UIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                int viewResId = RClassUtil.getResId(rClass, "id." + task.getDesc());
-                EditText view = (EditText) context.findViewById(viewResId);
-                view.setText(task.getValue());
-            }
-        });
-    }
-
-    private void goBack() {
-        UIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                context.onBackPressed();
-            }
-        });
-    }
-
-    private void clickAction(final Task task) {
-
-        UIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                int viewResId = RClassUtil.getResId(rClass, "id." + task.getDesc());
-                Button view = (Button) context.findViewById(viewResId);
-                view.performClick();
-
-                // test
-                int[] xy = new int[2];
-                view.getLocationOnScreen(xy);
-                LogCat.d("tester", xy[0] + ":" + xy[1]);
-            }
-        });
-
-//        WindowManager windowManager = getWindowManager();
-//        View v = new View(this);
-////                    ViewSizeHelper.getInstance(this).marginLeft(v, xy[0]);
-////                    ViewSizeHelper.getInstance(this).marginTop(v, xy[1]);
-////                    ViewSizeHelper.getInstance(this).setWidth(v, 15);
-////                    ViewSizeHelper.getInstance(this).setHeight(v, 15);
-//        v.setBackgroundColor(getResources().getColor(R.color.blue));
-////                    lp.width = 15;
-////                    lp.height = 15;
-////                    v.setLayoutParams(lp);
-////                    WindowManager.LayoutParams wlp = new WindowManager.LayoutParams(15,15 , WindowManager.LayoutParams.TYPE_APPLICATION, 0x00000080, PixelFormat.OPAQUE);
-//        WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
-//        mParams.format = PixelFormat.TRANSLUCENT;
-//        mParams.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//        mParams.width = 15;
-//        mParams.height = 15;
-//        mParams.x = 0;
-//        mParams.y = 0;
-//        windowManager.addView(v, mParams);
-    }
-
-    private void delayAction(Task task) {
-        ThreadPool.sleep(Long.parseLong(task.getValue()));
     }
 
     private void execute() {
@@ -159,7 +145,10 @@ public class KCTestLauncher {
 
         if(action == null) return;
 
-        LogCat.d("tester", "执行 " + packageName + "的action  " + action.getActid());
+        LogCat.d("tester", "执行 [" + packageName + "]  action  " + action.getActid());
+        if(logWindow != null) {
+            logWindow.appentText("执行 [" + packageName + "]  action  " + action.getActid());
+        }
 
         final Queue<Task> taskQueue = action.getTasks();
         ThreadPool.threadBackgroundPool(new Runnable() {
@@ -167,20 +156,28 @@ public class KCTestLauncher {
             public void run() {
                 for (Task task : taskQueue) {
                     String event = task.getEvent();
-                    if("input".equals(event)) {
-                        inputAction(task);
-                    } else if("click".equals(event)) {
-                        clickAction(task);
-                    } else if("delay".equals(event)) {
-                        delayAction(task);
-                    } else if("goBack".equals(event)) {
-                        KCTestLauncher.nextAction = task.getNextAction();
-                        goBack();
-                    }
+
+                    EventData eventData = new EventData();
+                    eventData.setContext(context);
+                    eventData.setrClass(rClass);
+                    eventData.setTask(task);
+
+                    LogCat.d(TAG, "当前事件:" + event);
+                    onEvent(eventData);
+
                 }
             }
         });
 
+    }
+
+    /**
+     * 触发事件消息
+     * @param event
+     */
+    private void onEvent(EventData event) {
+        LogCat.d(TAG, "onEvent " + event.getTask().getEvent());
+        Events.dispatchEvent(event);
     }
 
 }

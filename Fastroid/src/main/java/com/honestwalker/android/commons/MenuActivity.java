@@ -12,6 +12,7 @@ import com.honestwalker.android.commons.menu.TabPageIndicator;
 import com.honestwalker.android.commons.title.TitleArg;
 import com.honestwalker.android.kc_commons.ui.activity.BaseFragmentActivity;
 import com.honestwalker.android.kc_commons.ui.utils.TranslucentStatus;
+import com.honestwalker.android.kc_test.KCTestLauncher;
 import com.honestwalker.androidutils.Application;
 import com.honestwalker.androidutils.activity.fragment.menubar.MenubarItemBean;
 import com.lidroid.xutils.ViewUtils;
@@ -25,6 +26,8 @@ public abstract class MenuActivity extends BaseFragmentActivity implements IMenu
     protected BlurViewPager     pager;
     protected TabPageIndicator  indicator;
 
+    private KCTestLauncher kcTestLauncher;
+
     private MenuBuilder menuBuilder = new MenuBuilder();
 
     @Override
@@ -35,6 +38,26 @@ public abstract class MenuActivity extends BaseFragmentActivity implements IMenu
 
         ViewUtils.inject(this);
         initView();
+
+        kcTestLauncher = new KCTestLauncher();
+        kcTestLauncher.start(this);
+
+
+
+    }
+
+    /**
+     * 切换菜单
+     * @param page
+     */
+    public void setMenuPage(Integer page) {
+        indicator.setCurrentItem(page);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kcTestLauncher.next(this);
     }
 
     private void initView() {
@@ -50,7 +73,6 @@ public abstract class MenuActivity extends BaseFragmentActivity implements IMenu
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Application.exit(this);
     }
 
     @Override

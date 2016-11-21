@@ -4,17 +4,11 @@ import android.app.Activity;
 
 import com.honestwalker.android.commons.jscallback.bean.ShareParamBean;
 import com.honestwalker.android.commons.views.HtmlWebView.HtmlWebView;
-import com.honestwalker.android.fastroid.R;
 import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.IO.SharedPreferencesLoader;
 import com.honestwalker.androidutils.UIHandler;
 import java.util.HashMap;
 
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.OnekeyShareTheme;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 
 /**
  * share js callback 业务实现
@@ -22,14 +16,14 @@ import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
  */
 public class ShareAction extends JSCallbackAction<ShareParamBean> {
 
-    private Activity context;
+   /* private Activity context;
     private OnekeyShare oks;
     private ShareParamBean paramBean;
-    private HtmlWebView webView;
+    private HtmlWebView webView;*/
 
     @Override
     public String doAction(Activity context , ShareParamBean paramBean , HtmlWebView webView) {
-        this.context = context;
+      /*  this.context = context;
         this.paramBean = paramBean;
         this.webView = webView;
         LogCat.d("share" , "paramBean.getUrl()=" + paramBean.getUrl());
@@ -47,11 +41,11 @@ public class ShareAction extends JSCallbackAction<ShareParamBean> {
         oks.setCallback(platformActionListener);
         // 令编辑页面显示为Dialog模式
         oks.setDialogMode();
-        oks.show(context);
+        oks.show(context);*/
         return "";
     }
 
-    private ShareContentCustomizeCallback shareContentCustomizeCallback = new ShareContentCustomizeCallback() {
+   /* private ShareContentCustomizeCallback shareContentCustomizeCallback = new ShareContentCustomizeCallback() {
         @Override
         public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
 
@@ -98,6 +92,6 @@ public class ShareAction extends JSCallbackAction<ShareParamBean> {
         @Override
         public void onCancel(Platform platform, int i) {
         }
-    };
+    };*/
 
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.honestwalker.android.fastroid.R;
+import com.honestwalker.android.otto.BusManager;
 import com.honestwalker.androidutils.Application;
 import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.system.ProcessUtil;
@@ -48,6 +49,8 @@ public class BaseApplication extends android.app.Application  {
 
         appName = getResources().getString(R.string.app_name);
         appVersion = Application.getAppVersion(context, R.class);
+
+        BusManager.init();
 
     }
 

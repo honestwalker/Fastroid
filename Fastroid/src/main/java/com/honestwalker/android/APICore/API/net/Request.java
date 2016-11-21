@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.honestwalker.android.APICore.API.net.cookie.ApiCookieManager;
 import com.honestwalker.androidutils.Application;
 import com.honestwalker.androidutils.IO.LogCat;
+import com.honestwalker.androidutils.pool.ThreadPool;
 
 import org.apache.commons.httpclient.DefaultMethodRetryHandler;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -53,7 +54,7 @@ public class Request {
 
     protected Gson gson = new Gson();
 
-    private final int timeout = 25000;
+    private final int timeout = 10000;
     private final int retryTimes = 3;
 
     /** needSign : true 时会进行签名运算  fales 时不会进行签名运算 */

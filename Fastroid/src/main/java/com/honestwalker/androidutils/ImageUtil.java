@@ -20,7 +20,7 @@ import com.honestwalker.androidutils.exception.ExceptionUtil;
 
 
 public class ImageUtil {
-	
+
 	public static void rotateImg(Context context,ImageView iv,int angle,int resId){
 		Bitmap bitmapOrg = BitmapFactory.decodeResource(context.getResources(),resId);
 		int width = bitmapOrg.getWidth();

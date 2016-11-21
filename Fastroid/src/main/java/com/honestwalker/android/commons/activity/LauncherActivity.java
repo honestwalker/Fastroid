@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.honestwalker.androidutils.IO.LogCat;
+import com.honestwalker.androidutils.exception.ExceptionUtil;
 
 public class LauncherActivity extends Activity {
 
@@ -27,7 +28,8 @@ public class LauncherActivity extends Activity {
 			finish();
 
 		} catch (Exception e) {
-			Log.e("AndroidRuntime", "AndroidManifest LauncherActivty meta-data named MainActivity messing. ");
+			Log.e("AndroidRuntime", "[ERROR] : AndroidManifest LauncherActivty meta-data named MainActivity messing. ");
+			ExceptionUtil.showException(e);
 		}
 
 	}

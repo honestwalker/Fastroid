@@ -18,6 +18,7 @@ import com.honestwalker.android.commons.utils.IntentBind.IntentBinder;
 import com.honestwalker.android.commons.utils.StartActivityHelper;
 import com.honestwalker.android.kc_commons.ui.utils.TranslucentStatus;
 import com.honestwalker.android.kc_test.KCTestLauncher;
+import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.UIHandler;
 import com.honestwalker.androidutils.ViewUtils.ViewSizeHelper;
 import com.honestwalker.androidutils.equipment.DisplayUtil;
@@ -62,6 +63,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	private long onResumeTime = 0;
 
 	private KCTestLauncher kcTestLauncher;
+
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -162,7 +164,6 @@ public abstract class BaseActivity extends FragmentActivity {
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		this.layoutResView = inflater.inflate(layoutResID, null);
 	}
 
 	@Override

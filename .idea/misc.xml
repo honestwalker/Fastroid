@@ -44,17 +44,6 @@
     <option name="id" value="Android" />
   </component>
   <component name="SvnBranchConfigurationManager">
-    <option name="myConfigurationMap">
-      <map>
-        <entry key="$USER_HOME$/mnt/dev/honestwalker/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="trunkUrl" value="svn://svn.honestwalker.com:9999/kancart/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-      </map>
-    </option>
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
 </project>

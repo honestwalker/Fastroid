@@ -30,7 +30,10 @@ public class Task {
     }
 
     public String getValue() {
-        return value;
+        if(value != null)
+            return value.trim();
+        else
+            return value;
     }
 
     public void setValue(String value) {

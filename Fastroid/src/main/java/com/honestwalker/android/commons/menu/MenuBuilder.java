@@ -85,7 +85,9 @@ public class MenuBuilder {
         if(menuRawResId > 0) {
             try {
                 menuConfig.initMenu(context, rClass, menuRawResId);
-            } catch (Exception e){}
+            } catch (Exception e){
+                ExceptionUtil.showException(e);
+            }
         } else if(menubarItemBeanList != null){
             menuConfig.initMenu(menubarItemBeanList);
         }
@@ -133,10 +135,10 @@ public class MenuBuilder {
         }
         updateMenuItem();
 
-        if(fragments.size() > 0) {
-            //new TitleBuilder(context, TitleArgBuilder.getTitle(fragments.get(0).getMenubarItemBean().getMenubarPageBean().getTitle()));
-            changeTitle(0);
-        }
+//        if(fragments.size() > 0) {
+//            //new TitleBuilder(context, TitleArgBuilder.getTitle(fragments.get(0).getMenubarItemBean().getMenubarPageBean().getTitle()));
+//            changeTitle(0);
+//        }
 
     }
 
@@ -144,6 +146,8 @@ public class MenuBuilder {
      * 更新菜单对应Fragments页面
      */
     private void updateMenuItem(){
+
+        LogCat.d("xview", "getFragmentManager()= " + getFragmentManager());
 
         if(adapter == null) {
             adapter = new MenuPagerAdapter(
@@ -222,6 +226,8 @@ public class MenuBuilder {
             return ((FragmentActivity)menuContext).getSupportFragmentManager();
         } else if(menuContext instanceof Fragment) {
             return ((Fragment)menuContext).getChildFragmentManager();
+        } else if(context instanceof FragmentActivity) {
+            return ((FragmentActivity)context).getSupportFragmentManager();
         } else {
             return null;
         }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -13,8 +12,6 @@ import com.honestwalker.android.APICore.API.ParseStrategy.ParseStrategy;
 import com.honestwalker.android.APICore.API.net.Parameter;
 import com.honestwalker.android.APICore.API.net.Request;
 import com.honestwalker.android.APICore.API.net.RequestMethod;
-import com.honestwalker.android.APICore.API.req.BaseReq;
-import com.honestwalker.android.APICore.API.req.CheckverisonReq;
 import com.honestwalker.android.APICore.API.resp.BaseResp;
 import com.honestwalker.android.APICore.API.utils.NETWORK_TOAST_TYPE;
 import com.honestwalker.android.APICore.API.utils.NetworkToastManager;
@@ -22,45 +19,24 @@ import com.honestwalker.android.APICore.IO.API;
 import com.honestwalker.android.APICore.IO.ResponseMethod;
 import com.honestwalker.android.APICore.Server;
 import com.honestwalker.android.APICore.config.context.ContextConfigBean;
-import com.honestwalker.android.APICore.config.context.ContextLoader;
 import com.honestwalker.android.APICore.config.context.Environment;
 import com.honestwalker.android.fastroid.R;
-import com.honestwalker.androidutils.Application;
 import com.honestwalker.androidutils.IO.LogCat;
 import com.honestwalker.androidutils.StringUtil;
 import com.honestwalker.androidutils.TimeUtil;
 import com.honestwalker.androidutils.UIHandler;
-import com.honestwalker.androidutils.equipment.TelephoneUtil;
 import com.honestwalker.androidutils.exception.ExceptionUtil;
 import com.honestwalker.androidutils.pool.ThreadPool;
-import com.honestwalker.androidutils.propertices.ProperticesLoader;
-import com.honestwalker.androidutils.propertices.exception.ProperticeException;
 import com.honestwalker.androidutils.views.AlertDialogPage;
-import com.honestwalker.androidutils.window.DialogHelper;
 import com.honestwalker.androidutils.window.ToastHelper;
 
-import org.apache.commons.logging.LogConfigurationException;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.net.InetAddress;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Pattern;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 
 public abstract class BaseAPI {
 
@@ -70,9 +46,6 @@ public abstract class BaseAPI {
 
     private Gson gson = new Gson();
 
-    /** 环境配置错误标记 */
-    private boolean configError = false;
-
     /**
      * 服务端环境配置
      */
@@ -80,56 +53,19 @@ public abstract class BaseAPI {
 
     public BaseAPI(Context context) {
         this.context = context;
-//        loadContextConfig();
     }
 
     protected Request getRequest() {
         return new Request(context , false);
     }
 
-
-    private static int contextConfigResId = 0;
-
-    /**
-     * 设置服务端环境配置的raw索引
-     * @param contextConfigResId
-     */
-    static void setContextConfigResId(int contextConfigResId) {
-        BaseAPI.contextConfigResId = contextConfigResId;
-    }
-
-    /**
-     * 读取环境配置文件
-     */
-    private synchronized void loadContextConfig() {
-
-        if(configError) {
-            LogCat.d("REQUEST" , "环境配置文件错误。");
-            return;
-        }
-
-        if(contextConfig == null) {
-            ProperticesLoader loader = new ProperticesLoader();
-            InputStream is = context.getResources().openRawResource(contextConfigResId);
-            InputStreamReader isr = new InputStreamReader(is);
-            try {
-                loader.loadConfig(isr);
-                contextConfig = ContextLoader.load(loader, Environment.class);
-            } catch (ProperticeException e) {
-                configError = true;
-                ExceptionUtil.showException("REQUEST" , e);
-            }
-        }
-
-    }
-
     /**
      * 从注解中读取响应请求信息
-     * @param req
-     * @return
+     * @param req 请求对象
+     * @return req对象的API注解
      * @throws ApiException
      */
-    private API readRequestAnnotation(BaseReq req) throws ApiException {
+    private API readRequestAnnotation(Object req) throws ApiException {
         Class<?> target = req.getClass();
         API api = target.getAnnotation(API.class);
 
@@ -139,7 +75,7 @@ public abstract class BaseAPI {
     }
 
     protected <T extends BaseResp> void request(
-            final BaseReq req,
+            final Object req,
             final APIListener<T> listener ,
             final Class clazz ) {
         request(req, listener, clazz, true);
@@ -153,149 +89,102 @@ public abstract class BaseAPI {
      * @param unloginAutoSkipToLogin 需要登录是否自动条登录页面默认true (不传为true)
      */
     protected <T extends BaseResp> void request(
-            final BaseReq req,
+            final Object req,
             final APIListener<T> listener ,
             final Class clazz ,
             final boolean unloginAutoSkipToLogin ) {
         request(req, null, listener, clazz, unloginAutoSkipToLogin);
     }
 
-    protected <T extends BaseResp> void request(
-            final BaseReq req,
+    protected <T> void request(
+            final Object req,
             final Map<String, String> files,
             final APIListener<T> listener ,
             final Class clazz ) {
         request(req, files, listener, clazz, true);
     }
 
-    private Observable<String> myObservable;
-    private Subscriber<String> mySubscriber;
-
     /**
      * 包括文件上传的请求
      */
-    protected <T extends BaseResp> void request(
-            final BaseReq req,
+    protected <T> void request(
+            final Object req,
             final Map<String, String> files,
             final APIListener<T> listener ,
             final Class clazz,
             final boolean unloginAutoSkipToLogin ) {
 
-        if(configError) {
-            LogCat.d("REQUEST" , "环境配置文件错误。");
-            if(listener != null) {
-                listener.onFail(new ApiException("环境配置错误！"));
-            }
-            return;
-        }
-
         onStart(listener);
 
-        myObservable = Observable.create(
-                new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber<? super String> sub) {
-                        sub.onNext(execute(req, files, listener, clazz, unloginAutoSkipToLogin) + "  " + Thread.currentThread().getId());
-                        sub.onCompleted();
+        ThreadPool.threadPool(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    checkClientConnect();
+
+                    // 获取 api注解
+                    API api = readRequestAnnotation(req);
+
+                    // 发送请求
+                    String result = doRequest(req, api, files);
+
+                    // 获得json解析后的数据对象
+                    BaseResp<T> t = parse(api, result, clazz);
+
+                    if (t == null) throw new ApiException("json 解析失败! " + api.value());
+
+                    t.setJson(result);
+
+                    if ("success".equals(t.getResult())) {
+                        onComplete(t, listener);
+                    } else if ("2".equals(t.getCode())) {
+                        if (unloginAutoSkipToLogin && loginTimeoutHandler != null) {
+                            loginTimeoutHandler.sendEmptyMessage(0);
+                        } else {
+                            onFail(listener , new ApiException("未登录"));
+                        }
+                    } else {
+                        if (!api.handleErrorPersonally()) {
+                            int code = 1;
+                            try {
+                                code = Integer.parseInt(t.getCode());
+                            } catch (Exception e){
+                                ExceptionUtil.showException(TAG, e);
+                            }
+                            if (t.getErrmsg() != null && code >= 1000) {
+                                alert(t.getErrmsg());
+                            }
+                        }
+
+                        throw new ApiException(t, t.getJson());
                     }
+
+                } catch (SocketTimeoutException e) {
+                    onTimeout(listener);
+                } catch (ApiException e) {
+                    LogCat.d("api", "ApiException" + e.getMessage());
+                    onFail(listener, e);
+                } catch (Exception e) {
+                    LogCat.d("api", "Exception" + e.getMessage());
+                    ApiException apiException = new ApiException(e.getMessage());
+                    apiException.setStackTrace(e.getStackTrace());
+                    onFail(listener, apiException);
                 }
-        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-
-        mySubscriber = new Subscriber<String>() {
-            @Override
-            public void onNext(String s) {
-                LogCat.d("RX", "subscriber : " + s + "  " + Thread.currentThread().getId());
             }
+        });
 
-            @Override
-            public void onCompleted() {
-                LogCat.d("RX", "onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                ExceptionUtil.showException("RX", e);
-            }
-        };
-
-        myObservable.subscribe(mySubscriber);
-
-    }
-
-    private <T extends BaseResp> String execute(final BaseReq req,
-                         final Map<String, String> files,
-                         final APIListener<T> listener ,
-                         final Class clazz,
-                         final boolean unloginAutoSkipToLogin) {
-        try {
-
-            final Object reqTag = req.reqTag;
-
-            checkClientConnect();
-
-            API api = readRequestAnnotation(req);
-
-            // 发送请求
-            String result = doRequest(req, api, files);
-
-            // 获得json解析后的数据对象
-            BaseResp<T> t = parse(api, result, clazz);
-
-            if (t == null) throw new ApiException("json 解析失败! " + api.value());
-
-            t.setReqTag(reqTag);
-            t.setJson(result);
-
-            if ("success".equals(t.getResult())) {
-                onComplete(t, listener);
-            } else if ("2".equals(t.getCode())) {
-                if (unloginAutoSkipToLogin && loginTimeoutHandler != null) {
-                    loginTimeoutHandler.sendEmptyMessage(0);
-                } else {
-                    onFail(listener , new ApiException("未登录"));
-                }
-            } else {
-                if (!api.handleErrorPersonally()) {
-                    int code = 1;
-                    try {
-                        code = Integer.parseInt(t.getCode());
-                    } catch (Exception e){}
-                    if (t.getErrmsg() != null && code >= 1000) {
-                        alert(t.getErrmsg());
-                    }
-                }
-
-                throw new ApiException(t, t.getJson());
-            }
-            return result;
-
-        } catch (ConnectionPoolTimeoutException e) {
-            onTimeout(listener);
-        } catch (ConnectTimeoutException e) {
-            onTimeout(listener);
-        } catch (SocketTimeoutException e) {
-            onTimeout(listener);
-        } catch (ApiException e) {
-            LogCat.d("REQUEST", "ApiException" + e.getMessage());
-            onFail(listener, e);
-        } catch (Exception e) {
-            LogCat.d("REQUEST", "Exception" + e.getMessage());
-            ApiException apiException = new ApiException(e.getMessage());
-            apiException.setStackTrace(e.getStackTrace());
-            onFail(listener, apiException);
-        }
-        return null;
     }
 
     /**
      * 发起请求，获取api返回值json
      * @param api          req对象的api注解对象
      * @param files        上传的文件
-     * @return
+     * @return 请求结果字符串数据
      * @throws IOException
      * @throws InvalidKeyException
      */
-    private String doRequest(BaseReq req , API api , Map<String, String> files) throws IOException, InvalidKeyException {
+    private String doRequest(Object req , API api , Map<String, String> files) throws IOException, InvalidKeyException {
 
         Parameter parameters = getParameters(req);
         parameters.put(Server.context(context).getAction_key() , api.value());
@@ -324,7 +213,7 @@ public abstract class BaseAPI {
         ResponseMethod responseMethod = api.responseMethod();
         if (ResponseMethod.STRING.equals(responseMethod)) {
             result = "{\"result\":\"success\" , \"info\":\"" + result + "\"}";
-            LogCat.d("REQUEST", "返回类型String ， 转换成: " + result);
+            LogCat.d(TAG, "返回类型String ， 转换成: " + result);
         }
 
         return result;
@@ -332,10 +221,10 @@ public abstract class BaseAPI {
 
     /**
      * 解析数据对象
-     * @param api
-     * @param result
-     * @param defaultClass
-     * @param <T>
+     * @param api          api注解对象
+     * @param result       请求结果
+     * @param defaultClass 默认解析对象
+     * @param <T>          解析的实体类
      * @return
      */
     private <T> BaseResp<T> parse(API api , String result , Class defaultClass) {
@@ -350,11 +239,15 @@ public abstract class BaseAPI {
         if(parseStrategies != null) {
             for(Class strategyClass : parseStrategies) {
                 try {
+                    LogCat.d("json" , "解析策略 " + strategyClass);
                     ParseStrategy parseStrategy = (ParseStrategy) strategyClass.newInstance();
                     BaseResp<T> ts = (BaseResp<T>) gson.fromJson(result, parseStrategy.getStrategyClass());
                     t = (BaseResp<T>) parseStrategy.transition(ts);
+                    LogCat.d("json" , "目标 " + parseStrategy.getStrategyClass());
+                    LogCat.d("json" , strategyClass + " 解析成功 : " + t);
                     return t;
                 } catch (Exception e) {
+                    LogCat.d("json", strategyClass + "  解析失败");
                 }
             }
         }
@@ -363,9 +256,9 @@ public abstract class BaseAPI {
 
     /**
      * Handler 执行onComplete
-     * @param t
-     * @param listener
-     * @param <T>
+     * @param t        请求结果resp对象
+     * @param listener 毁掉对象
+     * @param <T>      请求结果实体对象
      */
     private <T> void onComplete(final BaseResp<T> t , final APIListener listener) {
         if(listener == null) return;
@@ -379,7 +272,7 @@ public abstract class BaseAPI {
 
     /**
      * 请求超时回调
-     * @param listener
+     * @param listener 回调对象
      */
     private void onTimeout(APIListener listener) {
         if(listener == null) return;
@@ -402,73 +295,10 @@ public abstract class BaseAPI {
 
     }
 
-    /**
-     * 检测host
-     * @param host
-     * @throws Exception
-     */
-    private void checkHost(String host) throws Exception {
-        if(isIPAddress(host)) {
-            boolean checkResult = isIpReachable(getIpAddress(host));
-            if(!checkResult) {
-                hostError();
-                throw new Exception("服务器未响应");
-            }
-        }
-    }
-    /**
-     * host错误回调
-     */
-    private void hostError() {
-        UIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ToastHelper.alert(context, context.getString(R.string.server_not_reached));
-            }
-        });
-    }
-
-    private boolean isIpReachable(String ip) {
-        try {
-            InetAddress addr = InetAddress.getByName(ip);
-            if (addr.isReachable(3000)) {
-                return true;
-            }
-            return false;
-        } catch (UnknownHostException e)  {
-        } catch (IOException e) {
-        }
-        return false;
-    }
-
-    private String getIpAddress(String host) {
-        String ip = host.replace("http://", "");
-        if(ip.indexOf(":") > -1) {
-            ip = ip.substring(0 , ip.indexOf(":"));
-        }
-        if(ip.indexOf("/") > -1) {
-            ip = ip.substring(0 , ip.indexOf("/"));
-        }
-        return ip;
-    }
-
-    private boolean isIPAddress(String host) {
-        String ip = host.replace("http://", "");
-        if(ip.indexOf(":") > -1) {
-            ip = ip.substring(0 , ip.indexOf(":"));
-        }
-        if(ip.indexOf("/") > -1) {
-            ip = ip.substring(0 , ip.indexOf("/"));
-        }
-        Pattern pattern = Pattern.compile( "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$" );
-        return pattern.matcher( ip ).matches();
-    }
-
     private void alert(final String msg) {
         UIHandler.post(new Runnable() {
             @Override
             public void run() {
-//                DialogHelper.alert(context, msg);
                 try {
                     AlertDialogPage dialog = new AlertDialogPage((Activity)context);
                     dialog.setContent(msg);
@@ -492,9 +322,9 @@ public abstract class BaseAPI {
 
     /**
      * 请求失败回调
-     * @param listener
-     * @param e
-     * @param <T>
+     * @param listener 回调对象
+     * @param e        api exception
+     * @param <T>      回调的实体对象
      */
     private <T> void onFail(final APIListener<T> listener , final ApiException e) {
         ExceptionUtil.showException(e);
@@ -526,7 +356,7 @@ public abstract class BaseAPI {
     }
 
     /** request对象转parameter */
-    private Parameter getParameters(BaseReq req) {
+    private Parameter getParameters(Object req) {
         Parameter params = new Parameter();
         Field[] fields = req.getClass().getFields();
         for(Field field : fields) {
@@ -547,7 +377,7 @@ public abstract class BaseAPI {
                             params.put(field.getName(), field.get(req));
                         }
 
-					}
+                    }
                 }
             } catch (Exception e) {
                 ExceptionUtil.showException(e);

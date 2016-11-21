@@ -25,7 +25,7 @@ public class TesterConfigReader {
     /**
      * 是否开启自动化测试
      */
-    private static boolean isEnable = false;
+//    private static boolean isEnable = false;
 
     private static Actions actions = null;
 
@@ -40,14 +40,29 @@ public class TesterConfigReader {
         Element root   = doc.getRootElement();//获得根节点
         List<Element> rootChildrenList = root.getChildren();//将根节点下的所有子节点放入List中
 
-        Element enableEmt = root.getChild("enable");
-
-        try {
-            isEnable = Boolean.parseBoolean(enableEmt.getValue());
-        } catch (Exception e) {}
-
         Actions actions = new Actions();
         Map<String, Action> actionMap = new HashMap<>();
+
+        // 读取自动化测试开关
+        Element enableEmt = root.getChild("enable");
+        boolean testerIsEnable = false;
+        try {
+            testerIsEnable = Boolean.parseBoolean(enableEmt.getValue());
+            LogCat.d("test", "读取enable " + testerIsEnable);
+        } catch (Exception e) {}
+
+        // 如去日志tag
+        Element logTagEmt = root.getChild("log-tag");
+        String logTag = logTagEmt.getValue();
+
+        // 读取日志对话框开关
+        Element logDialogEmt = root.getChild("log-dialog");
+        boolean logDialogEnable = false;
+        try {
+            logDialogEnable = Boolean.parseBoolean(logDialogEmt.getValue());
+            LogCat.d("test", "读取logDialogEnable " + logDialogEnable);
+        } catch (Exception e) {}
+
 
         for (int i = 0; i < rootChildrenList.size(); i++) {
             Element item = (Element) rootChildrenList.get(i);//取得节点实例
@@ -85,6 +100,12 @@ public class TesterConfigReader {
         }
 
         actions.setActions(actionMap);
+
+        actions.setEnable(testerIsEnable);
+
+        actions.setLogTag(logTag);
+
+        actions.setLogDialogEnable(logDialogEnable);
 
         TesterConfigReader.actions = actions;
 

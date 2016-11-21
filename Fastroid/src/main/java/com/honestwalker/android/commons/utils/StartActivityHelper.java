@@ -61,7 +61,7 @@ public class StartActivityHelper {
 		activityAnim(context, intent , animCode);
 		gc();
 	}
-	
+
 	public static void toActivityForResult(Activity context,Class descActivityClass,int requestCode) {
 		Intent intent = new Intent(context, descActivityClass);
 		onActivityChange(context, intent , 0);
@@ -103,7 +103,7 @@ public class StartActivityHelper {
 		gc();
 	}
 	
-	public static void onActivityChange(Activity context , Intent intent , int animCode) {
+	public static void onActivityChange(Context context , Intent intent , int animCode) {
 		if(intent != null) {
 			intent.putExtra("backAnimCode", getExitAnimCode(animCode));
 			intent.putExtra("lastActivityClass", context.getClass());
@@ -152,7 +152,7 @@ public class StartActivityHelper {
 	/**
 	 * 推拉效果动画
 	 */
-	public static void activityAnim( Activity context , Intent intent, int animCode) {
+	public static void activityAnim(Activity context , Intent intent, int animCode) {
 		if(animCode == 0) {
 			return;
 		}

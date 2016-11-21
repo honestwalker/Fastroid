@@ -11,6 +11,10 @@ public class Actions {
 
     private boolean enable;
 
+    private String logTag;
+
+    private boolean logDialogEnable;
+
     private Map<String, Action> actions;
 
     public Map<String, Action> getActions() {
@@ -27,5 +31,21 @@ public class Actions {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public String getLogTag() {
+        return logTag;
+    }
+
+    public void setLogTag(String logTag) {
+        this.logTag = logTag;
+    }
+
+    public boolean isLogDialogEnable() {
+        return logDialogEnable;
+    }
+
+    public void setLogDialogEnable(boolean logDialogEnable) {
+        this.logDialogEnable = logDialogEnable;
     }
 }
