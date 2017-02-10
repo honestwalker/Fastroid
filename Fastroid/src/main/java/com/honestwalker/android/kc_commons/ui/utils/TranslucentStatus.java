@@ -20,6 +20,14 @@ public class TranslucentStatus {
         return translucentStatus;
     }
 
+    public static void setDisable(Activity context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(context, false);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(context);
+        tintManager.setStatusBarTintEnabled(false);
+    }
+
     public static void setEnable(Activity context) {
 
         if(!support()) return;

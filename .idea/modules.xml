@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/mnt/dev/honestwalker/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework/Fastroid/Fastroid.iml" filepath="$USER_HOME$/mnt/dev/honestwalker/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework/Fastroid/Fastroid.iml" />
-      <module fileurl="file://$USER_HOME$/mnt/dev/honestwalker/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework/Fastroid-Framework.iml" filepath="$USER_HOME$/mnt/dev/honestwalker/KancartAndroid/honestwalker_projects/Fastroid/Fastroid-Framework/Fastroid-Framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Fastroid.iml" filepath="$PROJECT_DIR$/Fastroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Fastroid/Fastroid-Fastroid.iml" filepath="$PROJECT_DIR$/Fastroid/Fastroid-Fastroid.iml" />
     </modules>
   </component>
 </project>
